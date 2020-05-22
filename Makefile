@@ -46,6 +46,8 @@ pyperformance_pgo.json: build/pgo_env/bin/python
 
 .PHONY: mnist mnist_pgo
 mnist: build/env/bin/python
-	PYTHONPATH=models $< models/official/r1/mnist/mnist.py
+	PYTHONPATH=models $< models/official/r1/mnist/mnist.py --train_epochs=1
+	time PYTHONPATH=models $< models/official/r1/mnist/mnist.py
 mnist_pgo: build/pgo_env/bin/python
-	PYTHONPATH=models $< models/official/r1/mnist/mnist.py
+	PYTHONPATH=models $< models/official/r1/mnist/mnist.py --train_epochs=1
+	time PYTHONPATH=models $< models/official/r1/mnist/mnist.py
