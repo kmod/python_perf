@@ -1,6 +1,6 @@
 [submodule "cpython"]
-	path = cpython
+	path = ml_bench/cpython
 	url = https://github.com/python/cpython
 [submodule "models"]
-	path = models
+	path = ml_bench/models
 	url = https://github.com/tensorflow/models
