@@ -1,4 +1,4 @@
-all: build/cpython_install/bin/python build/cpython_install_pgo/bin/python
+all: build/env/bin/python build/pgo_env/bin/python
 
 build build/cpython_install build/cpython_install_pgo build/cpython_build build/cpython_build_pgo:
 	mkdir -p $@
@@ -23,11 +23,12 @@ build/cpython_install_pgo/bin/python3: build/cpython_build_pgo/python
 
 build/env/bin/python: build/cpython_install/bin/python3
 	rm -rfv build/env
-	(virtualenv -p $< build/env; $@/bin/pip install -r requirements.txt) || rm -rfv build/env
+	(virtualenv -p $< build/env; build/env/bin/pip install -r requirements.txt) || rm -rfv build/env
+build/env: | build/env/bin/python
 
 build/pgo_env/bin/python: build/cpython_install_pgo/bin/python3
 	rm -rfv build/pgo_env
-	(virtualenv -p $< build/pgo_env; $@/bin/pip install -r requirements.txt) || rm -rfv build/pgo_env
+	(virtualenv -p $< build/pgo_env; build/pgo_env/bin/pip install -r requirements.txt) || rm -rfv build/pgo_env
 
 .PHONY: pyperformance pyperformance_pgo
 pyperformance: build/env/bin/python
@@ -43,3 +44,8 @@ pyperformance_pgo: build/pgo_env/bin/python
 pyperformance_pgo.json: build/pgo_env/bin/python
 	$< -m pyperformance run -o pyperformance_pgo.json
 
+.PHONY: mnist mnist_pgo
+mnist: build/env/bin/python
+	PYTHONPATH=models $< models/official/r1/mnist/mnist.py
+mnist_pgo: build/pgo_env/bin/python
+	PYTHONPATH=models $< models/official/r1/mnist/mnist.py
