@@ -1,0 +1,13 @@
+all: 00 01 02 03 04 05 06 07 08
+
+PYTHON=../../cpython_install/bin/python3
+%: str%.py
+	time $(PYTHON) $<
+
+CFLAGS=-I../../cpython_install/include/python3.7m -fPIC -O3 -DNDEBUG -fwrapv
+CC=clang
+%.so: %.o
+	clang $< -shared -o $@
+
+%: str%.so
+	time $(PYTHON) -c "import $(patsubst %.so,%,$<)"
